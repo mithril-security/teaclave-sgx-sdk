@@ -316,3 +316,6 @@ mod sealed {
     /// This allows adding more trait methods in the future.
     pub trait Sealed {}
 }
+
+#[cfg(debug_assertions)]
+pub mod debug;
