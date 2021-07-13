@@ -29,20 +29,10 @@
 #[macro_use]
 extern crate alloc;
 
-#[cfg(all(target_os = "linux", target_arch = "x86_64"))]
 extern crate sgx_types;
 
 #[macro_use]
 mod macros;
 
-cfg_if! {
-    if #[cfg(target_os = "linux")] {
-        mod linux;
-        pub use linux::*;
-    } else if #[cfg(target_os = "android")]  {
-        mod android;
-        pub use android::*;
-    } else {
-
-    }
-}
+mod linux;
+pub use linux::*;

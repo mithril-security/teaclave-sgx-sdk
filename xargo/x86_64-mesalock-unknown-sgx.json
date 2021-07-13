@@ -32,7 +32,6 @@
   },
   "target-c-int-width": "32",
   "target-endian": "little",
-  "target-family": "unix",
   "target-pointer-width": "64",
   "vendor": "mesalock"
 }
