@@ -16,7 +16,7 @@
 // under the License..
 
 cfg_if! {
-    if #[cfg(all(target_os = "linux", target_arch = "x86_64"))] {
+    if #[cfg(all(target_arch = "x86_64"))] {
         mod x86_64;
         pub use self::x86_64::*;
     } else {

@@ -23,7 +23,7 @@ use std::process::Command;
 
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
-    let target = env::var("TARGET").expect("TARGET was not set");
+    let target = "x86_64-unknown-linux-sgx";
     let host = env::var("HOST").expect("HOST was not set");
 
     let _ = build_libunwind(&host, &target);

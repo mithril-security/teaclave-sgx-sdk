@@ -103,7 +103,7 @@ extern "C" {
 
 #[link(name = "sgx_tstdc")]
 extern "C" {
-    #[cfg_attr(target_os = "linux", link_name = "__errno_location")]
+    #[cfg_attr(any(target_os = "linux", all(target_env="sgx", target_vendor="mesalock")), link_name = "__errno_location")]
     fn errno_location() -> *mut c_int;
     fn strerror_r(errnum: c_int, buf: *mut c_char, buflen: size_t) -> c_int;
 }
@@ -302,7 +302,8 @@ s! {
         pub ai_protocol: c_int,
         pub ai_addrlen: socklen_t,
 
-        #[cfg(any(target_os = "linux",
+        #[cfg(any(all(target_env="sgx", target_vendor="mesalock"),
+                  target_os = "linux",
                   target_os = "emscripten",
                   target_os = "fuchsia"))]
         pub ai_addr: *mut sockaddr,
