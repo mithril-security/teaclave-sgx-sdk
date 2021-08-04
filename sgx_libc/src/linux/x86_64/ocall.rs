@@ -266,6 +266,10 @@ extern "C" {
     pub fn u_close_ocall(result: *mut c_int,
                          errno: *mut c_int,
                          fd: c_int) -> sgx_status_t;
+    pub fn u_eventfd_ocall(result: *mut c_int,
+                         errno: *mut c_int,
+                         init: c_uint,
+                         flags: c_int) -> sgx_status_t;
     // time
     pub fn u_clock_gettime_ocall(result: *mut c_int,
                                  errno: *mut c_int,
@@ -1871,6 +1875,24 @@ pub unsafe fn close(fd: c_int) -> c_int {
     let status = u_close_ocall(&mut result as *mut c_int,
                                &mut error as *mut c_int,
                                fd);
+
+    if status == sgx_status_t::SGX_SUCCESS {
+        if result == -1 {
+            set_errno(error);
+        }
+    } else {
+        set_errno(ESGX);
+        result = -1;
+    }
+    result
+}
+
+pub unsafe fn eventfd(init: c_uint, flags: c_int) -> c_int {
+    let mut result: c_int = 0;
+    let mut error: c_int = 0;
+    let status = u_eventfd_ocall(&mut result as *mut c_int,
+                               &mut error as *mut c_int,
+                               init, flags);
 
     if status == sgx_status_t::SGX_SUCCESS {
         if result == -1 {
