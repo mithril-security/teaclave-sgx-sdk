@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License..
 
-use libc::{self, c_int, c_ulong, c_void, iovec, off64_t, size_t, ssize_t};
+use libc::{self, c_int, c_uint, c_ulong, c_void, iovec, off64_t, size_t, ssize_t};
 use std::io::Error;
 
 #[no_mangle]
@@ -256,6 +256,21 @@ pub extern "C" fn u_ioctl_arg1_ocall(
 pub extern "C" fn u_close_ocall(error: *mut c_int, fd: c_int) -> c_int {
     let mut errno = 0;
     let ret = unsafe { libc::close(fd) };
+    if ret < 0 {
+        errno = Error::last_os_error().raw_os_error().unwrap_or(0);
+    }
+    if !error.is_null() {
+        unsafe {
+            *error = errno;
+        }
+    }
+    ret
+}
+
+#[no_mangle]
+pub extern "C" fn u_eventfd_ocall(error: *mut c_int, init: c_uint, flags: c_int) -> c_int {
+    let mut errno = 0;
+    let ret = unsafe { libc::eventfd(init, flags) };
     if ret < 0 {
         errno = Error::last_os_error().raw_os_error().unwrap_or(0);
     }

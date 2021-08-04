@@ -43,5 +43,7 @@ enclave {
         int u_ioctl_arg1_ocall([out] int *error, int fd, int request, [in, out] int *arg);
 
         int u_close_ocall([out] int *error, int fd);
+
+        int u_eventfd_ocall([out] int *error, int init, int flags);
     };
 };
