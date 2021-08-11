@@ -920,6 +920,7 @@ pub const SOCK_RDM: c_int = 4;
 pub const IP_MULTICAST_IF: c_int = 32;
 pub const IP_MULTICAST_TTL: c_int = 33;
 pub const IP_MULTICAST_LOOP: c_int = 34;
+pub const IP_TOS: c_int = 1;
 pub const IP_TTL: c_int = 2;
 pub const IP_HDRINCL: c_int = 3;
 pub const IP_PKTINFO: c_int = 8;
