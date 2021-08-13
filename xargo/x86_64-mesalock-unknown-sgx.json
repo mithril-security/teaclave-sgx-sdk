@@ -6,6 +6,7 @@
   "env": "sgx",
   "exe-allocation-crate": "alloc_system",
   "executables": true,
+  "features": "+rdrnd,+rdseed",
   "has-elf-tls": true,
   "has-rpath": true,
   "linker-flavor": "gcc",
