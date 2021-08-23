@@ -188,6 +188,14 @@ pub use alloc_crate::str;
 pub use alloc_crate::string;
 pub use alloc_crate::vec;
 pub use core::any;
+
+// The `no_inline`-attribute is required to make the documentation of all
+// targets available.
+// See https://github.com/rust-lang/rust/pull/57808#issuecomment-457390549 for
+// more information.
+#[doc(no_inline)] // Note (#82861): required for correct documentation
+pub use core::arch;
+
 pub use core::array;
 pub use core::cell;
 pub use core::char;
