@@ -53,6 +53,14 @@ extern "C" {
                             addr: *mut c_void,
                             length: size_t,
                             prot: c_int) -> sgx_status_t;
+    pub fn u_mlock_ocall(result: *mut c_int, 
+                        error: *mut c_int,
+                        addr: *const c_void, 
+                        len: size_t) -> sgx_status_t;
+    pub fn u_munlock_ocall(result: *mut c_int, 
+                        error: *mut c_int,
+                        addr: *const c_void, 
+                        len: size_t) -> sgx_status_t;
     // env
     pub fn u_getuid_ocall(result: *mut uid_t) -> sgx_status_t;
     pub fn u_environ_ocall(result: *mut *const *const c_char) -> sgx_status_t;
@@ -576,6 +584,46 @@ pub unsafe fn mprotect(addr: *mut c_void, length: size_t, prot: c_int) -> c_int 
                                   addr,
                                   length,
                                   prot);
+
+    if status == sgx_status_t::SGX_SUCCESS {
+        if result == -1 {
+            set_errno(error);
+        }
+    } else {
+        set_errno(ESGX);
+        result = -1;
+    }
+    result
+}
+
+pub unsafe fn mlock(addr: *const c_void, len: size_t) -> c_int {
+    let mut result: c_int = 0;
+    let mut error: c_int = 0;
+    let status = u_mlock_ocall(&mut result as *mut c_int,
+                                &mut error as *mut c_int,
+                                addr,
+                                len,
+                                );
+
+    if status == sgx_status_t::SGX_SUCCESS {
+        if result == -1 {
+            set_errno(error);
+        }
+    } else {
+        set_errno(ESGX);
+        result = -1;
+    }
+    result
+}
+
+pub unsafe fn munlock(addr: *const c_void, len: size_t) -> c_int {
+    let mut result: c_int = 0;
+    let mut error: c_int = 0;
+    let status = u_munlock_ocall(&mut result as *mut c_int,
+                                &mut error as *mut c_int,
+                                addr,
+                                len,
+                                );
 
     if status == sgx_status_t::SGX_SUCCESS {
         if result == -1 {

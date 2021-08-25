@@ -115,3 +115,44 @@ pub extern "C" fn u_mprotect_ocall(
     }
     ret
 }
+
+#[no_mangle]
+pub extern "C" fn u_mlock_ocall(
+    error: *mut c_int,
+    addr: *mut c_void,
+    length: size_t,
+)  -> c_int {
+    let mut errno = 0;
+    let ret = unsafe { libc::mlock(addr, length) };
+    if ret < 0 
+    {
+        errno = Error::last_os_error().raw_os_error().unwrap_or(0);
+    }
+    if !error.is_null() {
+        unsafe {
+            *error = errno;
+        }
+    }
+    ret
+}
+
+#[no_mangle]
+pub extern "C" fn u_munlock_ocall(
+    error: *mut c_int,
+    addr: *mut c_void,
+    length: size_t,
+)  -> c_int {
+    let mut errno = 0;
+    let ret = unsafe { libc::munlock(addr, length) };
+    if ret < 0 
+    {
+        errno = Error::last_os_error().raw_os_error().unwrap_or(0);
+    }
+    if !error.is_null() {
+        unsafe {
+            *error = errno;
+        }
+    }
+    ret
+}
+

@@ -36,5 +36,8 @@ enclave {
 
         int u_msync_ocall([out] int *error, [user_check] void *addr, size_t length, int flags);
         int u_mprotect_ocall([out] int *error, [user_check] void *addr, size_t length, int prot);
+        int u_mlock_ocall([out] int *result, [user_check] void *addr, size_t length);
+        int u_munlock_ocall([out] int *result, [user_check] void *addr, size_t length);
+
     };
 };
