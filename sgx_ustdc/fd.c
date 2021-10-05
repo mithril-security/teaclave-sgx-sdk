@@ -24,6 +24,15 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+ssize_t u_eventfd_ocall(int *error, int init, int flags)
+{
+    ssize_t ret = eventfd(init, flags);
+    if (error) {
+        *error = ret == -1 ? errno : 0;
+    }
+    return ret;
+}
+
 ssize_t u_read_ocall(int *error, int fd, void *buf, size_t count)
 {
     ssize_t ret = read(fd, buf, count);
