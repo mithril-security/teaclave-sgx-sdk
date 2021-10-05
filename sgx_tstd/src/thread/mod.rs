@@ -117,6 +117,10 @@ pub const fn require_unstable_const_init_thread_local() {}
 pub struct Builder {
     // A name for the thread-to-be, for identification in panic messages
     name: Option<String>,
+    // Dummy parameter, it is size of the stack for the spawned thread in
+    // the original Rust std library, but here, this parameter is handled
+    // differently 
+    stack_size: Option<usize>,
 }
 
 #[cfg(feature = "thread")]
@@ -141,7 +145,7 @@ impl Builder {
     /// ```
     pub fn new() -> Builder {
         assert!(!(rsgx_get_thread_policy() != SgxThreadPolicy::Bound), "The sgx thread policy must be Bound!");
-        Builder { name: None }
+        Builder { name: None, stack_size: None }
     }
 
     /// Names the thread-to-be. Currently the name is used for identification
@@ -170,6 +174,15 @@ impl Builder {
     /// [naming-threads]: ./index.html#naming-threads
     pub fn name(mut self, name: String) -> Builder {
         self.name = Some(name);
+        self
+    }
+
+    /// Sets the size of the stack (in bytes) for the new thread... 
+    /// ... or at least it's what it does on the Rust std library.
+    /// This function is a dummy in order to silence many error when porting crates
+    /// as the stack size is handled differently by the SDK.  
+    pub fn stack_size(mut self, size: usize) -> Builder {
+        self.stack_size = Some(size);
         self
     }
 
@@ -281,7 +294,7 @@ impl Builder {
         F: Send + 'a,
         T: Send + 'a,
     {
-        let Builder { name } = self;
+        let Builder { name, stack_size } = self;
 
         let my_thread = SgxThread::new(name.map(|name| {
             CString::new(name).expect("thread name may not contain interior null bytes")
